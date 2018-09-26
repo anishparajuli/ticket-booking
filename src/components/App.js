@@ -1,8 +1,7 @@
 import React, {
     Component
 } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import '../App.css';
 import axios from 'axios';
 import { Button, Grid, Header, Popup } from 'semantic-ui-react';
 
@@ -205,7 +204,6 @@ class ScreenLayout extends Component {
     // handle success
     context.setState({loaded:true, data:response.data});
     
-
   })
   .catch(function (error) {
     // handle error
