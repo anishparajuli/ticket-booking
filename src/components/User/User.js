@@ -1,29 +1,24 @@
 import React, {
     Component
 } from 'react';
-import '../App.css';
-import App from './App';
-import Featured from './Featured';
-import axios from 'axios';
+
+import UserDetails from './UserDetails';
+import UserSettings from './UserSettings';
 
 import { BrowserRouter, Route, Link, Switch } from 'react-router-dom'              
 /* ................................ 
 .........Main App class ...........
 ..................................*/
                
-class Main extends Component {
+class User extends Component {
                
-    constructor(props) {
-    super(props);
-    this.state = {
- 
-    };
-  }
                
     render() {
         
-        return ( <div>   
-                <Featured />
+        return ( <div>
+                <Route exact path={this.props.match.path} component = {UserDetails}/>   
+                <Route path={this.props.match.url+"/settings"} component = {UserSettings}/>   
+                
                 
           </div>
                 
@@ -33,4 +28,4 @@ class Main extends Component {
 }
 
 
-export default Main;
+export default User;

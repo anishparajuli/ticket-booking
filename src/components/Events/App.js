@@ -1,7 +1,6 @@
 import React, {
     Component
 } from 'react';
-import '../App.css';
 import axios from 'axios';
 import { Button, Grid, Header, Popup } from 'semantic-ui-react';
 
@@ -199,9 +198,11 @@ class ScreenLayout extends Component {
         
     componentDidMount() {
       var context=this;
-        axios.get('https://ticketbooking-12.appspot.com/events/1/shows/5702167830724608') //5630121163620352
+      console.log('https://ticketbooking-12.appspot.com'+context.props.url);
+        axios.get('https://ticketbooking-12.appspot.com'+context.props.url) //5630121163620352
   .then(function (response) {
     // handle success
+    console.log(response.status);
     context.setState({loaded:true, data:response.data});
     
   })
@@ -234,7 +235,7 @@ class App extends Component {
         
         return ( <div className = "App" >
                 <Header as="h1">Show Booking</Header>
-                <ScreenLayout/>
+                <ScreenLayout show_id={this.props.match.params.show_id} url={this.props.match.url} />
                 </div>
                 
                 

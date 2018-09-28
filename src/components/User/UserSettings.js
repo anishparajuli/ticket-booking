@@ -1,22 +1,18 @@
 import React, {
     Component
 } from 'react';
-import '../App.css';
 
-
-import { BrowserRouter, Route, Link, Switch } from 'react-router-dom'              
 /* ................................ 
 .........Main App class ...........
 ..................................*/
                
-class User extends Component {
+class UserSettings extends Component {
                
                
     render() {
         
         return ( <div>   
-               User
-                
+               User settings
           </div>
                 
         );
@@ -25,4 +21,4 @@ class User extends Component {
 }
 
 
-export default User;
+export default UserSettings;

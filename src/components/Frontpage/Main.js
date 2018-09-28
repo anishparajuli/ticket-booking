@@ -1,20 +1,33 @@
 import React, {
     Component
 } from 'react';
-import User from './User/User';
+
+import Featured from './Featured';
+import EventList from './EventsList';
+import axios from 'axios';
 
 import { BrowserRouter, Route, Link, Switch } from 'react-router-dom'              
 /* ................................ 
 .........Main App class ...........
 ..................................*/
                
-class Admin extends Component {
+class Main extends Component {
                
+    constructor(props) {
+    super(props);
+    this.state = {
+ 
+    };
+  }
                
     render() {
         
-        return ( <div>   
-               Admin
+        return ( <div>
+                   
+                <Featured />
+                <EventList/>
+                
+                 
           </div>
                 
         );
@@ -23,4 +36,4 @@ class Admin extends Component {
 }
 
 
-export default Admin;
+export default Main;

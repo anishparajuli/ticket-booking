@@ -1,0 +1,1 @@
+export const base_url="https://ticketbooking-12.appspot.com"
