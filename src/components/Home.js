@@ -8,6 +8,7 @@ import Admin from './Admin';
 import Login from './Login';
 import User from './User';
 import Header from './Header';
+import Dashboard from './Dashboard';
 import axios from 'axios';
 
 import { BrowserRouter, Route, Link, Switch } from 'react-router-dom'              
@@ -27,6 +28,7 @@ class Home extends Component {
     render() {
         
         return ( <div>
+
             <Header />
                 <Route exact path='/' component={Main}/>
                 <Route path='/App' component={App}/>
