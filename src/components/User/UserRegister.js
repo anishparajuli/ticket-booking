@@ -4,6 +4,7 @@ import React, {
 import { Link} from 'react-router-dom'; 
 import { Form,Button, Grid, Segment, Divider} from 'semantic-ui-react';
 import axios from 'axios';
+import config from 'react-global-configuration';
 /* ................................ 
 .........Main App class ...........
 ..................................*/
@@ -64,9 +65,10 @@ class UserRegister extends Component {
     register(){
         
         console.log(JSON.stringify(this.state));
-        axios.post('http://ticketbooking-12.appspot.com/user/register',this.state)
+        axios.post(config.get('base_url')+this.props.match.url,this.state)
           .then(function (response) {
             console.log(response);
+            
           })
           .catch(function (error) {
             console.log(error);

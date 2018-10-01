@@ -1,7 +1,7 @@
 import React,{Component} from 'react'
 import { Link } from 'react-router-dom'
 import {Menu, Input} from 'semantic-ui-react';
-
+import config from 'react-global-configuration';
 
 
 class Header extends Component{

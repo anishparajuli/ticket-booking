@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import axios from 'axios';
 import { Button, Grid, Header, Popup } from 'semantic-ui-react';
-
+import config from 'react-global-configuration';
 
 /* ................................ 
 ............Billing class ............
@@ -35,17 +35,36 @@ class Billing extends Component{
 ................................................*/
 
 class Submit extends Component{
+
+    constructor(props){
+        super(props);
+        this.sendDetails=this.sendDetails.bind(this);
+    }
+
     render(){
         return(
             <Grid.Row centered  >
-            <Button positive onClick={this.sendDetails()} disabled={!this.props.value.length}>Buy</Button>
-            <Button color="yellow" onClick={this.sendDetails()} disabled={!this.props.value.length}>Book</Button>
+            <Button positive onClick={()=>this.sendDetails("buyseat")} disabled={!this.props.value.length}>Buy</Button>
+            <Button color="yellow" onClick={()=>this.sendDetails("bookseat")} disabled={!this.props.value.length}>Book</Button>
             </Grid.Row>
         );
     }
     
-    sendDetails(){
+    sendDetails(purchaseType){
         
+        console.log(this.props.url);
+
+
+            axios.post(config.get('base_url')+this.props.url+'/'+purchaseType,{"seat_no":this.props.value},{headers: {'USER_TOKEN': localStorage.getItem('USER_TOKEN')}}) //5630121163620352
+            .then(function (response) {
+              // handle success
+              console.log(response.status);
+              
+            })
+            .catch(function (error) {
+              // handle error
+              console.log(error);
+            });
     }
 }
 
@@ -64,7 +83,7 @@ class Seat extends Component{
             <Popup trigger={
             <Button icon inverted  disabled={this.props.data.status!=4} 
             onClick={()=>this.props.onClick()}
-            color={( this.props.data.status==0)?"green":"grey"}
+            color={( this.props.data.status==2)?"green":"grey"}
             ></Button>
             } content={"Price: Rs. "+this.props.data.price} />
             
@@ -144,7 +163,7 @@ class ScreenLayout extends Component {
     handleSeatClicks(key){
                 
                 let newState = Object.assign({}, this.state.data);
-                newState.screen_seats[key].status=0;
+                newState.screen_seats[key].status=2;
                 this.setState(newState);
                 
                 this.setState({selected:[...this.state.selected,key]});
@@ -182,7 +201,7 @@ class ScreenLayout extends Component {
         return (
             <Grid>  
                 <Billing total_amount={this.state.total_price} number_of_seats={this.state.selected.length} onClick={()=>this.onCancelClick()}/>
-                <Submit value={this.state.selected}/>
+                <Submit value={this.state.selected} url={this.props.url}/>
             <Grid.Row centered>
             <table className="screen">
                 <tbody>
@@ -198,10 +217,19 @@ class ScreenLayout extends Component {
         
     componentDidMount() {
       var context=this;
-      console.log('https://ticketbooking-12.appspot.com'+context.props.url);
-        axios.get('https://ticketbooking-12.appspot.com'+context.props.url) //5630121163620352
-  .then(function (response) {
-    // handle success
+       const instance = axios.create({
+        baseURL: config.get('base_url')+context.props.url,
+        timeout: 10000,
+        headers: {'USER_TOKEN': localStorage.getItem('USER_TOKEN')}
+      });
+      /*
+         axios({url:config.get('base_url')+context.props.url,
+        method:'get', headers: {
+            'USER_TOKEN': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjExNTM4MTIxNjgwfQ.O6xybrBRbvNTNZg6Uv2dthTheZ72AGjTGz8yCPTU5Lo' }})
+  */instance.get()
+  
+  /*.then(function (response) {
+
     console.log(response.status);
     context.setState({loaded:true, data:response.data});
     
@@ -209,6 +237,25 @@ class ScreenLayout extends Component {
   .catch(function (error) {
     // handle error
     console.log(error);
+    console.log(error.data);
+  }); */
+/* 
+    fetch(config.get('base_url')+context.props.url,{method:'GET',headers:
+{
+    'USER_TOKEN': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjExNTM4MTIxNjgwfQ.O6xybrBRbvNTNZg6Uv2dthTheZ72AGjTGz8yCPTU5Lo'
+}}) */
+.then(function (response) {
+    // handle success
+    if(response.status==200){
+        console.log("got upto here");
+        console.log(response);
+    context.setState({loaded:true, data:response.data});
+    }
+  })
+  .catch(function (error) {
+    // handle error
+    console.log(error);
+    console.log(error.data);
   });
     }
 

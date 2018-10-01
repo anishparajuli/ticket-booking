@@ -3,7 +3,7 @@ import React, {
 } from 'react';
 import axios from 'axios';
 import { Card,Loader, Image, Grid} from 'semantic-ui-react';
-
+import config from 'react-global-configuration';
 import { Link} from 'react-router-dom'              
 /* ................................ 
 .........Main App class ...........
@@ -53,7 +53,7 @@ class EventList extends Component {
 
     componentDidMount() {
       var context=this;
-        axios.get('https://ticketbooking-12.appspot.com/events') //5630121163620352
+        axios.get(config.get('base_url')+'/events') //5630121163620352
   .then(function (response) {
     // handle success
     context.setState({events:response.data});

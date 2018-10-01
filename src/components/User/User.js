@@ -1,7 +1,7 @@
 import React, {
     Component
 } from 'react';
-
+import config from 'react-global-configuration';
 import UserDetails from './UserDetails';
 import UserSettings from './UserSettings';
 

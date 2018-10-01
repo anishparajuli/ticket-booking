@@ -4,6 +4,7 @@ import React, {
 import { Link,Redirect} from 'react-router-dom'; 
 import { Form,Button, Grid, Segment, Divider} from 'semantic-ui-react';
 import axios from 'axios';
+import config from 'react-global-configuration';
 /* ................................ 
 .........Main App class ...........
 ..................................*/
@@ -35,7 +36,7 @@ class Login extends Component {
             <Button type='submit'>Login</Button>
             <Divider/>
             <Segment inverted textAlign='center'>
-            Don't have an accout? <br/> <Link to='/User/Register'> Click here to register</Link>
+            Don't have an accout? <br/> <Link to='/register/user'> Click here to register</Link>
             </Segment>
           </Form>
           </Segment>
@@ -46,13 +47,13 @@ class Login extends Component {
 
     login(){
         
-        axios({method:'post',url:'http://ticketbooking-12.appspot.com/user/login',data:this.state,
+        axios({method:'post',url:config.get('base_url')+'/login',data:this.state,
         config: { headers: {'Content-Type': 'application/json' }}})
           .then(function (response) {
             console.log(response);
             if(response.status==200){
                 localStorage.setItem('USER_TOKEN', response.data.token);
-                return(<Redirect to='/' />);
+                localStorage.setItem('username',this.state.username);
             }
             console.log(localStorage.getItem('USER_TOKEN'));
           })

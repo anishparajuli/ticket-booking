@@ -31,10 +31,10 @@ class Home extends Component {
                 <Switch>
                 <Route exact path='/' component={Main}/>
                 <Route path= '/events/:event_id/shows' component={EventDetail} />
-                <Route path='/Login' component={Login}/>
-                <Route path='/Admin' component={Admin} />
-                <Route path='/User/Register' component={UserRegister} />
-                <Route path='/User/:user_id' component={User} />
+                <Route path='/login' component={Login}/>
+                <Route path='/admin' component={Admin} />
+                <Route path='/register/user' component={UserRegister} />
+                <Route path='/user/:user_id' component={User} />
                 <Redirect to='/'/>
                 </Switch>
           </div>

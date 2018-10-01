@@ -4,6 +4,7 @@ import React, {
 import {Route} from 'react-router-dom'
 import ShowsList from './ShowsList';
 import App from './App';
+import config from 'react-global-configuration';
 /* ................................ 
 .........Main App class ...........
 ..................................*/
