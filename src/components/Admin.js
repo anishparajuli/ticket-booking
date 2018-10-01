@@ -1,3 +1,4 @@
+
 import React, {Component} from 'react';
 import '../App.css';
 import {
@@ -27,6 +28,7 @@ const events = "events/"
 
 
 class Admin extends Component {
+
 constructor(props) {
     super(props)
 
@@ -56,6 +58,9 @@ render() {
             width:'100%',
         }
     }
+               
+               
+
     return(
         <Sidebar.Pushable  as={Segment} style={styles.sidebaradmin}> 
             <Sidebar as={Menu} visible vertical >

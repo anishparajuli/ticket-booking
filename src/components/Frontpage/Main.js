@@ -1,9 +1,9 @@
 import React, {
     Component
 } from 'react';
-import '../App.css';
-import App from './App';
+
 import Featured from './Featured';
+import EventList from './EventsList';
 import axios from 'axios';
 
 import { BrowserRouter, Route, Link, Switch } from 'react-router-dom'              
@@ -22,9 +22,12 @@ class Main extends Component {
                
     render() {
         
-        return ( <div>   
+        return ( <div>
+                   
                 <Featured />
+                <EventList/>
                 
+                 
           </div>
                 
         );
