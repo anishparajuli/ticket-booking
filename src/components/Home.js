@@ -8,6 +8,7 @@ import Login from './Login';
 import User from './User/User';
 import UserRegister from './User/UserRegister';
 import Header from './Header';
+import Dashboard from './Dashboard';
 import axios from 'axios';
 import EventDetail from './Events/EventDetail';
 import {Route, Link,Switch, Redirect} from 'react-router-dom'              
@@ -28,6 +29,7 @@ class Home extends Component {
     render() {
         
         return ( <div>
+
             <Header />
                 <Switch>
                 <Route exact path='/' component={Main}/>
