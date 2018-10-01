@@ -11,6 +11,7 @@ import Header from './Header';
 import axios from 'axios';
 import EventDetail from './Events/EventDetail';
 import {Route, Link,Switch, Redirect} from 'react-router-dom'              
+import AddScreen from '../Admin/AddScreen';
 /* ................................ 
 .........Main App class ...........
 ..................................*/
@@ -35,6 +36,7 @@ class Home extends Component {
                 <Route path='/admin' component={Admin} />
                 <Route path='/register/user' component={UserRegister} />
                 <Route path='/user/:user_id' component={User} />
+                <Route path='/screen/add' component={AddScreen}/>
                 <Redirect to='/'/>
                 </Switch>
           </div>

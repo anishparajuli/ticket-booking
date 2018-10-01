@@ -59,7 +59,9 @@ class Submit extends Component{
             .then(function (response) {
               // handle success
               console.log(response.status);
-              
+                if(response.status==200){
+                    console.log(response.data);
+                }
             })
             .catch(function (error) {
               // handle error
