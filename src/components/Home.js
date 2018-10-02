@@ -12,7 +12,7 @@ import Dashboard from './Dashboard';
 import axios from 'axios';
 import EventDetail from './Events/EventDetail';
 import {Route, Link,Switch, Redirect} from 'react-router-dom'              
-import AddScreen from '../Admin/AddScreen';
+import AddScreen from './Admin/AddScreen';
 /* ................................ 
 .........Main App class ...........
 ..................................*/

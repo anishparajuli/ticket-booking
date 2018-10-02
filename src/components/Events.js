@@ -142,14 +142,15 @@ class Events extends Component {
                                                 const {id, name, description, duration} = event;
                                                 return (
 
-                                                    <Grid.Column stretched width={3}>
+                                                    <Grid.Column stretched="stretched" width={3}>
                                                         <Card
                                                             // image='https://mir-s3-cdn-cf.behance.net/project_modules/disp/09b24e31234507.564a1d23c07b4.gif'
-                                                            >
+                                                        >
                                                             <Card.Content header={name}/>
                                                             <Card.Content description={description}/>
                                                             <Card.Content extra="extra">
-                                                                <Icon name='clock'/> {duration} min
+                                                                <Icon name='clock'/> {duration}
+                                                                min
                                                             </Card.Content>
                                                         </Card>
                                                     </Grid.Column>
@@ -164,16 +165,13 @@ class Events extends Component {
                             <Grid columns={12}>
 
                                 <Grid.Column width={3} align="center">
-                                    <Card
-                                        image={loadingIcon}></Card>
+                                    <Card image={loadingIcon}></Card>
                                 </Grid.Column>
                                 <Grid.Column width={3} align="center">
-                                    <Card
-                                        image={loadingIcon}></Card>
+                                    <Card image={loadingIcon}></Card>
                                 </Grid.Column>
                                 <Grid.Column width={3} align="center">
-                                    <Card
-                                        image={loadingIcon}></Card>
+                                    <Card image={loadingIcon}></Card>
                                 </Grid.Column>
 
                             </Grid>
