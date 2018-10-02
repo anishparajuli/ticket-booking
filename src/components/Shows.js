@@ -16,6 +16,7 @@ import {
 import axios from 'axios';
 import moment from 'moment';
 import {DatetimePickerTrigger} from 'rc-datetime-picker';
+import {DateTimeInput} from 'semantic-ui-calendar-react';
 import {ToastContainer, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import loadingIcon from '../assets/icons/loading.gif';
@@ -55,7 +56,8 @@ class Shows extends Component {
             formOpen2: false,
             eventId: null,
             screenId: null,
-            moment: moment()
+            moment: moment(),
+            showDateTime:'',
         }
         this.toggleNewShowForm = this
             .toggleNewShowForm
@@ -78,6 +80,12 @@ class Shows extends Component {
         console.log(moment.format('YYYY-MM-DD HH:mm'));
     }
 
+    handleDateTimeChange=(event,{name,value})=>{
+        this.setState({
+            showDateTime:value,
+        });
+        console.log(value);
+    }
     toggleNewShowForm = () => {
         var ctx = this;
         this.setState({
@@ -321,9 +329,9 @@ class Shows extends Component {
                         )
                 }
 
-                <Modal dimmer='blurring' open={newshowform} onClose={this.toggleNewShowForm}>
+                <Modal dimmer='' open={newshowform} onClose={this.toggleNewShowForm}>
                     <Modal.Header>Add New Shows</Modal.Header>
-                    <Modal.Content >
+                    <Modal.Content scrolling >
                         <label>Event Name</label>
                         {
                             this.state.isLoadingEvents
@@ -363,9 +371,15 @@ class Shows extends Component {
                         }
 
                         <Divider/>
+                        <label>Show Time</label>
 
-                        <DatetimePickerTrigger
-                            shortcuts={shortcuts}
+                        <DateTimeInput
+                                name="showDateTime"
+                                placeholder="Show Time"
+                                value={this.state.showDateTime}
+                                iconPosition="left"
+                                onChange={this.handleDateTimeChange} />
+                        {/* <DatetimePickerTrigger
                             moment={this.state.moment}
                             onChange={this.handleDateChange}>
                             <input
@@ -375,7 +389,8 @@ class Shows extends Component {
                                     .moment
                                     .format('YYYY-MM-DD HH:mm')}
                                 readOnly="readOnly"/>
-                        </DatetimePickerTrigger>
+                        </DatetimePickerTrigger> */}
+                        
 
                         <Divider/>
                         <label>Category Prices:</label>
