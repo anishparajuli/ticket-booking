@@ -18,7 +18,6 @@ import axios from 'axios';
 import {BrowserRouter, Route, Link, Switch} from 'react-router-dom';
 import Dashboard from './Dashboard';
 
-import Main from './Main';
 import Events from './Events';
 import Shows from './Shows';
 
