@@ -15,6 +15,7 @@
     "react-scripts": "1.1.5",
     "react-selectable-fast": "^2.1.1",
     "react-toastify": "^4.4.0",
+    "semantic-ui-calendar-react": "^0.9.1",
     "semantic-ui-css": "^2.4.0",
     "semantic-ui-react": "^0.82.5"
   },

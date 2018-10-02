@@ -8,15 +8,20 @@ import {
     Dropdown,
     Divider,
     Form,
-    Input
+    Input,
+    Grid,
+    Card,
+    Icon
 } from 'semantic-ui-react';
 import axios from 'axios';
 import moment from 'moment';
 import {DatetimePickerTrigger} from 'rc-datetime-picker';
-import {ToastContainer,toast} from 'react-toastify';
+import {DateTimeInput} from 'semantic-ui-calendar-react';
+import {ToastContainer, toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import config from 'react-global-configuration';
 
+import loadingIcon from '../assets/icons/loading.gif';
 
 /*  ................................
 .........Main App class ...........
@@ -38,16 +43,21 @@ class Shows extends Component {
         super(props)
         this.state = {
             isLoading: true,
+            isLoadingCategory: true,
+            isLoadingScreen: true,
+            isLoadingEvents: true,
+            errors: false,
             eventData: [],
             screenData: [],
             categoryData: [],
-            showData:[],
-            categoryPriceData:[],//filled when form submitted
+            showData: [],
+            categoryPriceData: [], //filled when form submitted
             newshowform: false,
             formOpen2: false,
             eventId: null,
             screenId: null,
             moment: moment(),
+            showDateTime:'',
         }
         this.toggleNewShowForm = this
             .toggleNewShowForm
@@ -55,10 +65,14 @@ class Shows extends Component {
         this.getCategoryforScreen = this
             .getCategoryforScreen
             .bind(this);
-            this.handleShowSubmit=this.handleShowSubmit.bind(this);
-            this.handleFormChange=this.handleFormChange.bind(this);
-            
-            // this.checkIfCategoryPriceExists=this.checkIfCategoryPriceExists.bind(this);
+        this.handleShowSubmit = this
+            .handleShowSubmit
+            .bind(this);
+        this.handleFormChange = this
+            .handleFormChange
+            .bind(this);
+
+        // this.checkIfCategoryPriceExists=this.checkIfCategoryPriceExists.bind(this);
     }
 
     handleDateChange = (moment) => {
@@ -66,16 +80,26 @@ class Shows extends Component {
         console.log(moment.format('YYYY-MM-DD HH:mm'));
     }
 
+    handleDateTimeChange=(event,{name,value})=>{
+        this.setState({
+            showDateTime:value,
+        });
+        console.log(value);
+    }
     toggleNewShowForm = () => {
         var ctx = this;
         this.setState({
             newshowform: !this.state.newshowform,
             screenId: null,
-            categoryDate: []
+            categoryData: [],
+            isLoadingScreen: true,
+            isLoadingEvents: true,
+            isLoadingCategory: true
         });
+
         console.log(this.state.newshowform)
         if (!this.state.newshowform) {
-            //fetching show
+            //fetching screen
             axios({
                 method: 'get',
                 url: APIURL + listclientscreen,
@@ -91,7 +115,7 @@ class Shows extends Component {
                             return {key: obj.id, value: obj.id, location: obj.location, text: obj.name}
                         })
 
-                    ctx.setState({screenData: repl})
+                    ctx.setState({screenData: repl, isLoadingScreen: false})
 
                 })
                 .catch(function (error) {
@@ -99,40 +123,41 @@ class Shows extends Component {
                 })
             }
 
-            //fetching event
-            axios({
-                method: 'get',
-                url: APIURL + listevent,
-                headers: {
-                    'USER_TOKEN': ctoken
-                }
+        //fetching event
+        axios({
+            method: 'get',
+            url: APIURL + listevent,
+            headers: {
+                'USER_TOKEN': ctoken
+            }
+        })
+            .then(function (response) {
+                console.log(response.data);
+                var repl = response
+                    .data
+                    .map(function (obj) {
+                        return {key: obj.id, value: obj.id, duration: obj.duration, text: obj.name}
+                    })
+
+                ctx.setState({eventData: repl, isLoadingEvents: false})
+
             })
-                .then(function (response) {
-                    console.log(response.data);
-                    var repl = response
-                        .data
-                        .map(function (obj) {
-                            return {key: obj.id, value: obj.id, duration: obj.duration, text: obj.name}
-                        })
-
-                    ctx.setState({eventData: repl})
-
-                })
-                .catch(function (error) {
-                    console.log(error);
-                })
-            }
-        changeEvent = (event, data) => {
+            .catch(function (error) {
+                console.log(error);
+            })
+        }
+    changeEvent = (event, data) => {
         this.setState({eventId: data.value})
     }
 
     changeScreen = (event, data) => {
-        this.setState({screenId: data.value})
+        this.setState({screenId: data.value, isLoadingCategory: true})
         this.getCategoryforScreen(data.value);
     }
 
     getCategoryforScreen = (cid) => {
         var ctx = this;
+
         axios({
             method: 'get',
             url: APIURL + listclientscreen + '/' + cid + listcatforscreen,
@@ -143,10 +168,14 @@ class Shows extends Component {
             .then(function (response) {
                 console.log(response.data);
                 // this.setState({     categoryData: });
-                var catpricing=response.data.map(function(c){
-                    return {category:c.id,price:null}
-                });
-                ctx.setState({categoryData: response.data,categoryPriceData:catpricing})
+                var catpricing = response
+                    .data
+                    .map(function (c) {
+                        return {category: c.id, price: null}
+                    });
+                ctx.setState(
+                    {categoryData: response.data, categoryPriceData: catpricing, isLoadingCategory: false}
+                )
                 console.log(catpricing);
             })
             .catch(function (error) {
@@ -155,68 +184,66 @@ class Shows extends Component {
 
     }
 
-    //  checkIfCategoryPriceExists(categoryId) {
-    //     return this.state.categoryPriceData.some((cat) => Object.keys(cat).indexOf(categoryId) > -1)
-    //   }
+    // checkIfCategoryPriceExists(categoryId) {     return
+    // this.state.categoryPriceData.some((cat) =>
+    // Object.keys(cat).indexOf(categoryId) > -1)   }
 
-    handleFormChange(event){
-       
-            // this.state.categoryPriceData.forEach(element => {
-            //     if(element.category===event.target.name){
-            //     element.price=event.target.value;
-            //     }
-            // });
-            this.state.categoryPriceData=this.state.categoryPriceData.map(function(obj){
-                if(obj.category==event.target.name)
-                {
-                    obj.price=event.target.value;
+    handleFormChange(event) {
+
+        // this.state.categoryPriceData.forEach(element => {
+        // if(element.category===event.target.name){ element.price=event.target.value; }
+        // });
+        this.state.categoryPriceData = this
+            .state
+            .categoryPriceData
+            .map(function (obj) {
+                if (obj.category == event.target.name) {
+                    obj.price = event.target.value;
                     //console.log('data found'+ obj.category);
                     return obj;
                 }
                 return obj;
 
-                console.log('new val for '+event.target.name+ 'is '+event.target.value);
+                console.log('new val for ' + event.target.name + 'is ' + event.target.value);
                 console.log(obj);
             });
 
-            // console.log('NEW PRICE::: '+ this.state.categoryPriceData   );
+        // console.log('NEW PRICE::: '+ this.state.categoryPriceData   );
     }
 
-    handleShowSubmit(event){
+    handleShowSubmit(event) {
         event.preventDefault();
-        var context=this;
+        var context = this;
         axios({
             method: 'post',
-            url: APIURL+addshow,
-            data:{
-                
-                'event_id':this.state.eventId,
-                'screen_id':this.state.screenId,
-                'datetime':this.state.moment.format('YYYY-MM-DD HH:mm') ,
-                'category-price':this.state.categoryPriceData,
+            url: APIURL + addshow,
+            data: {
+
+                'event_id': this.state.eventId,
+                'screen_id': this.state.screenId,
+                'datetime': this
+                    .state
+                    .moment
+                    .format('YYYY-MM-DD HH:mm'),
+                'category-price': this.state.categoryPriceData
             },
             headers: {
-                'USER_TOKEN': ctoken,
-            },
+                'USER_TOKEN': ctoken
+            }
         })
-        
             .then(function (response) {
                 console.log(response.data);
-               context.setState({
-                    newshowform:false,
-               })
-               toast.success('Response: '+response.data.message,{
-                   position:toast.POSITION.TOP_CENTER,
-                   zindex:199,
-               });
-               
+                context.setState({newshowform: false})
+                toast.success('Response: ' + response.data.message, {
+                    position: toast.POSITION.TOP_CENTER,
+                    zindex: 199
+                });
+
             })
             .catch(function (error) {
                 // handle error
                 console.log(error);
-                toast.error(error, {
-                    position: toast.POSITION.TOP_CENTER,
-                  });
+                toast.error(error, {position: toast.POSITION.TOP_CENTER});
             });
     }
 
@@ -238,93 +265,176 @@ class Shows extends Component {
 
         return (
             <div>
-                <ToastContainer autoClose={2000} />
-                <Button primary="primary" onClick={this.toggleNewShowForm}>Add New Show</Button>
+                {/* A toast to show some results */}
+                <ToastContainer autoClose={2000}/>
 
-                <h1 align='center'>Shows List</h1>
+                <div>
+                    <Button
+                        style={{
+                            float: 'right'
+                        }}
+                        primary="primary"
+                        onClick={this.toggleNewShowForm}>Add New Show</Button>
+                    <br></br>
+                    <h1 align='center'>Shows List</h1>
+                    <br></br>
+                </div>
 
-                {isLoading?
-                (<div><Button className="btn btn-primary btn-loading"></Button></div>)
-                :
-                (   <div>
-                    <h1>sasa</h1>
-                    {this.state.showData.map(show=>{
-                        const{screen_name,datetime}=show;
-                        return(
-                        <div>
-                        <h3>ScreenName: {screen_name}</h3>
-                        <p>Time: {datetime}</p>
-                        </div>
-                        );
-                    })}
-                    </div>
-                )
+                {
+                    isLoading
+                        ? (
+                            <Grid columns={12}>
+
+                                <Grid.Column width={3} align="center">
+                                    <Card image={loadingIcon}></Card>
+                                </Grid.Column>
+                                <Grid.Column width={3} align="center">
+                                    <Card image={loadingIcon}></Card>
+                                </Grid.Column>
+                                <Grid.Column width={3} align="center">
+                                    <Card image={loadingIcon}></Card>
+                                </Grid.Column>
+
+                            </Grid>
+                        )
+                        : (
+                            <div>
+                                <Grid columns={12}>
+
+                                    {
+                                        this
+                                            .state
+                                            .showData
+                                            .map(show => {
+                                                const {screen_name, datetime, event_name} = show;
+                                                return (
+                                                    <Grid.Column stretched="stretched" width={3}>
+                                                        <Card >
+                                                            <Card.Content header={screen_name}></Card.Content>
+                                                            <Card.Content description={datetime}></Card.Content>
+
+                                                            <Card.Content extra="extra">
+                                                                {event_name}
+                                                            </Card.Content>
+                                                        </Card>
+
+                                                    </Grid.Column>
+                                                );
+                                            })
+                                    }
+
+                                </Grid>
+
+                            </div>
+                        )
                 }
 
-                <Modal dimmer='blurring' open={newshowform} onClose={this.toggleNewShowForm}>
+                <Modal dimmer='' open={newshowform} onClose={this.toggleNewShowForm}>
                     <Modal.Header>Add New Shows</Modal.Header>
-                    <Modal.Content >
+                    <Modal.Content scrolling >
                         <label>Event Name</label>
-                        <Dropdown
-                            placeholder='Select Event'
-                            fluid="fluid"
-                            search="search"
-                            selection="selection"
-                            options={eventData}
-                            onChange={this.changeEvent}/>
+                        {
+                            this.state.isLoadingEvents
+                                ? <Dropdown
+                                        placeholder='Select Event'
+                                        loading="loading"
+                                        fluid="fluid"
+                                        search="search"
+                                        selection="selection"/>
+                                : <Dropdown
+                                        placeholder='Select Event'
+                                        fluid="fluid"
+                                        search="search"
+                                        selection="selection"
+                                        options={eventData}
+                                        onChange={this.changeEvent}/>
+                        }
+
                         <br></br>
                         <Divider/>
                         <label>Select Screen</label>
-                        <Dropdown
-                            placeholder='Select Screen'
-                            fluid="fluid"
-                            search="search"
-                            selection="selection"
-                            options={screenData}
-                            onChange={this.changeScreen}/>
+                        {
+                            this.state.isLoadingScreen
+                                ? <Dropdown
+                                        placeholder='Select Screen'
+                                        loading="loading"
+                                        fluid="fluid"
+                                        search="search"
+                                        selection="selection"/>
+                                : <Dropdown
+                                        placeholder='Select Screen'
+                                        fluid="fluid"
+                                        search="search"
+                                        selection="selection"
+                                        options={screenData}
+                                        onChange={this.changeScreen}/>
+                        }
 
                         <Divider/>
-                        <DatetimePickerTrigger
-                            shortcuts={shortcuts}
+                        <label>Show Time</label>
+
+                        <DateTimeInput
+                                name="showDateTime"
+                                placeholder="Show Time"
+                                value={this.state.showDateTime}
+                                iconPosition="left"
+                                onChange={this.handleDateTimeChange} />
+                        {/* <DatetimePickerTrigger
                             moment={this.state.moment}
                             onChange={this.handleDateChange}>
                             <input
                                 type="text"
-                                value={this.state.moment
+                                value={this
+                                    .state
+                                    .moment
                                     .format('YYYY-MM-DD HH:mm')}
                                 readOnly="readOnly"/>
-                        </DatetimePickerTrigger>
+                        </DatetimePickerTrigger> */}
+                        
 
                         <Divider/>
                         <label>Category Prices:</label>
                         <br></br>
+                        {
+                            this.state.isLoadingCategory
+                                ? <Button primary="primary" loading="loading"></Button>
+                                : <Form
+                                        style={{
+                                            marginLeft: 50,
+                                            marginTop: 10
+                                        }}>
 
-                        <Form
-                            style={{
-                                marginLeft: 50,
-                                marginTop: 10
-                            }}>
+                                        {
+                                            this
+                                                .state
+                                                .categoryData
+                                                .map(cat => {
+                                                    const {id, name} = cat;
+                                                    return (
+                                                        <Form.Field inline="inline">
+                                                            <label>{name}</label>
+                                                            <Input
+                                                                type="number"
+                                                                name={id}
+                                                                placeholder='Price'
+                                                                onChange={this.handleFormChange}/>
+                                                        </Form.Field>
+                                                    );
+                                                })
 
-                            {
-                                this
-                                    .state
-                                    .categoryData
-                                    .map(cat => {
-                                        const {id, name} = cat;
-                                        return (
-                                            <Form.Field inline="inline">
-                                                <label>{name}</label>
-                                                <Input type="number" name={id} placeholder='Price' onChange={this.handleFormChange}/>
-                                            </Form.Field>
-                                        );
-                                    })
+                                        }
+                                    </Form>
+                        }
 
-                            }
-                        </Form>
                         <Divider/>
                         <strong>Status</strong>
                         <p>eventid: {eventId}</p>
                         <p>screenid: {screenId}</p>
+                        {
+                            this.state.errors
+                                ? <p>There was some error. Check console</p>
+                                : <p>No any error</p>
+                        }
                     </Modal.Content>
                     <Modal.Actions>
                         <Button color='red' onClick={this.toggleNewShowForm}>
@@ -364,19 +474,17 @@ class Shows extends Component {
     }
 
     componentDidMount() {
-        var context=this;
+        var context = this;
         // Make a request for a user with a given ID
         axios({
             method: 'get',
-            url: APIURL+listshows,
+            url: APIURL + listshows,
             headers: {
-                'USER_TOKEN': ctoken,
+                'USER_TOKEN': ctoken
             },
             //withCredentials:true,
-            
 
         })
-      
             .then(function (response) {
                 console.log(response.data);
 
@@ -388,9 +496,7 @@ class Shows extends Component {
                 console.log(error);
             });
 
-            
-        }
-    
+    }
 
 }
 

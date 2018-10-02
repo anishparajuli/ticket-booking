@@ -2,9 +2,20 @@ import React, {Component} from 'react';
 import '../App.css';
 import axios from 'axios';
 import {BrowserRouter, Route, Link, Switch} from 'react-router-dom'
-import {Button, Modal, Form, Label, Grid,Image, LabelDetail} from 'semantic-ui-react';
+import {
+    Button,
+    Modal,
+    Form,
+    Label,
+    Grid,
+    Image,
+    Card,
+    Icon,
+    LabelDetail
+} from 'semantic-ui-react';
 import ApiHandler from './ApiHandler';
 import config from 'react-global-configuration';
+import loadingIcon from '../assets/icons/loading.gif';
 
 /*  ................................
 .........Main App class ...........
@@ -28,22 +39,25 @@ class Events extends Component {
             eventData: [],
             neweventform: false,
             eventId: null,
-            eventname:null,
-            eventdescription:null,
-            eventduration:null,
-          
-            uploadedimage: null,
-            
+            eventname: null,
+            eventdescription: null,
+            eventduration: null,
+
+            uploadedimage: null
         }
-        this.handleFormChange=this.handleFormChange.bind(this);
-        this.handleSubmit=this.handleSubmit.bind(this);
+        this.handleFormChange = this
+            .handleFormChange
+            .bind(this);
+        this.handleSubmit = this
+            .handleSubmit
+            .bind(this);
 
     }
 
     toggleNewEventForm = () => {
         this.setState({
             neweventform: !this.state.neweventform,
-            
+
             uploadedimage: null,
             categoryDate: []
         })
@@ -56,42 +70,38 @@ class Events extends Component {
 
     }
 
-    handleFormChange(event){
+    handleFormChange(event) {
         this.setState({
-            [event.target.name]:event.target.value,
+            [event.target.name]: event.target.value
         });
         console.log(event.target.value);
     }
 
-    handleSubmit(event){
+    handleSubmit(event) {
         event.preventDefault();
         //console.log(this.state.eventname+''+this.state.eventdescription);
-        var context=this;
+        var context = this;
         axios({
             method: 'post',
-            url: APIURL+'/events/add',
-            data:{
-                
-                'name':this.state.eventname,
-                'description':this.state.eventdescription,
-                'duration':this.state.eventduration ,
+            url: APIURL + '/events/add',
+            data: {
+
+                'name': this.state.eventname,
+                'description': this.state.eventdescription,
+                'duration': this.state.eventduration
             },
             headers: {
-                'USER_TOKEN': ctoken,
+                'USER_TOKEN': ctoken
             },
             //withCredentials:true,
-            
 
         })
         // .get('http://workonclick.com/api/alllabors')
         // .get(APIURL+clientevents,{headers: {'USER_TOKEN': ctoken} })
             .then(function (response) {
                 console.log(response.data);
-                context.setState({
-                    neweventform:false,
-                });
-                // handle success
-               // context.setState({eventData: response.data, isLoading: false})
+                context.setState({neweventform: false});
+                // handle success context.setState({eventData: response.data, isLoading: false})
             })
             .catch(function (error) {
                 // handle error
@@ -104,55 +114,67 @@ class Events extends Component {
         const {isLoading, eventData, neweventform} = this.state;
         return (
             <div>
-
-                <Button primary="primary" onClick={this.toggleNewEventForm}>Add New Event</Button>
-
-                <h1 align='center'>Event List</h1>
+                <div>
+                    <Button
+                        style={{
+                            float: 'right'
+                        }}
+                        primary="primary"
+                        onClick={this.toggleNewEventForm}>Add New Event</Button>
+                    <br></br>
+                    <h1 align='center'>Event List</h1>
+                    <br></br>
+                </div>
                 {
                     !isLoading
                         ? (
                             <div>
-                                
+
                                 {/* {eventData} */}
 
+                                <Grid columns={12}>
+                                    {
+                                        this
+                                            .state
+                                            .eventData
+                                            .map(event => {
+                                                const {id, name, description, duration} = event;
+                                                return (
 
-                                 {this.state.eventData.map(event => {
-                                        const {id,name,description,duration} = event;
-                                        return (
-                                            <div key={id}>
-                                                <p>Name: {name}</p>
-                                                <p>Description: {description}</p>
-                                                <p>Duration:{duration}
-                                                </p>
-                                                
-                                            </div>
-                                        );
-                                    })
-                                }
+                                                    <Grid.Column stretched="stretched" width={3}>
+                                                        <Card
+                                                            // image='https://mir-s3-cdn-cf.behance.net/project_modules/disp/09b24e31234507.564a1d23c07b4.gif'
+                                                        >
+                                                            <Card.Content header={name}/>
+                                                            <Card.Content description={description}/>
+                                                            <Card.Content extra="extra">
+                                                                <Icon name='clock'/> {duration}
+                                                                min
+                                                            </Card.Content>
+                                                        </Card>
+                                                    </Grid.Column>
+
+                                                );
+                                            })
+                                    }
+                                </Grid>
                             </div>
                         )
-                        : (<Grid columns={12} >
-                            
-                            <Grid.Column width={3} align="center">
-                              <Image src='https://react.semantic-ui.com/images/wireframe/image.png' />
-                              {/* <label>Event Name</label> */}
-                              
-                              <label>Event Name</label><br></br>
-                              <label style={{
-                                  fontSize:'1em',
-                                  color:'black',
-                                  opacity:0.4
-                              }}>Lorem Ipsum</label>
-                            </Grid.Column>
-                            <Grid.Column width={3}>
-                              <Image src='https://react.semantic-ui.com/images/wireframe/image.png' />
-                            </Grid.Column>
-                            <Grid.Column width={3}>
-                              <Image src='https://react.semantic-ui.com/images/wireframe/image.png' />
-                            </Grid.Column >
-                            
-                            
-                          </Grid>)
+                        : (
+                            <Grid columns={12}>
+
+                                <Grid.Column width={3} align="center">
+                                    <Card image={loadingIcon}></Card>
+                                </Grid.Column>
+                                <Grid.Column width={3} align="center">
+                                    <Card image={loadingIcon}></Card>
+                                </Grid.Column>
+                                <Grid.Column width={3} align="center">
+                                    <Card image={loadingIcon}></Card>
+                                </Grid.Column>
+
+                            </Grid>
+                        )
                 }
 
                 <Modal dimmer='blurring' open={neweventform} onClose={this.toggleNewEventForm}>
@@ -166,17 +188,27 @@ class Events extends Component {
                                     }}>
                                     <Form.Field>
                                         <label>Event Name</label>
-                                        <input name="eventname" placeholder='Event Name' onChange={this.handleFormChange}/>
+                                        <input
+                                            name="eventname"
+                                            placeholder='Event Name'
+                                            onChange={this.handleFormChange}/>
                                     </Form.Field>
 
                                     <Form.Field>
                                         <label>Event Description</label>
-                                        <input name="eventdescription" placeholder='Event Description' onChange={this.handleFormChange}/>
+                                        <input
+                                            name="eventdescription"
+                                            placeholder='Event Description'
+                                            onChange={this.handleFormChange}/>
                                     </Form.Field>
 
                                     <Form.Field>
                                         <label>Event Duration</label>
-                                        <input type='number' name="eventduration" placeholder="Duration in minutes" onChange={this.handleFormChange}></input>
+                                        <input
+                                            type='number'
+                                            name="eventduration"
+                                            placeholder="Duration in minutes"
+                                            onChange={this.handleFormChange}></input>
                                     </Form.Field>
                                 </div>
                                 <div >
@@ -242,25 +274,18 @@ class Events extends Component {
         );
     }
 
-    // fetchEvents() {}
-    // fetchScreen(){
-
-    // }
-    // fetchCategory(cid){
-        
-    // }
+    // fetchEvents() {} fetchScreen(){ } fetchCategory(cid){ }
 
     componentDidMount() {
-        var context=this;
+        var context = this;
         // Make a request for a user with a given ID
         axios({
             method: 'get',
-            url: APIURL+'/client/listevents',
+            url: APIURL + '/client/listevents',
             headers: {
-                'USER_TOKEN': ctoken,
+                'USER_TOKEN': ctoken
             },
             //withCredentials:true,
-            
 
         })
         // .get('http://workonclick.com/api/alllabors')
@@ -276,10 +301,10 @@ class Events extends Component {
                 console.log(error);
             });
 
-            // fetch('http://workonclick.com/api/alllabors') .then(response =>
-            // response.json()) .then(data => this.setState({eventData: data, isLoading:
-            // false})) .catch(error => console.log(error))
-        }
+        // fetch('http://workonclick.com/api/alllabors') .then(response =>
+        // response.json()) .then(data => this.setState({eventData: data, isLoading:
+        // false})) .catch(error => console.log(error))
+    }
 
 }
 
