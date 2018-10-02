@@ -39,7 +39,7 @@ class UserRegister extends Component {
         <Form inverted >
             <Form.Group widths="equal">
             <Form.Input label='Username' placeholder='Username' name="username" value={username} onChange={this.handleChange}/>
-            <Form.Input label='Password' placeholder='Password' name="password" value={password} onChange={this.handleChange}/>
+            <Form.Input label='Password' placeholder='Password' type='password' name="password" value={password} onChange={this.handleChange}/>
             </Form.Group>
             <Form.Input label='Email' placeholder='Email' name="email" value={email} onChange={this.handleChange}/>
             <Form.Input label='Contact number' placeholder='Contact' name="contact" value={contact} onChange={this.handleChange}/>

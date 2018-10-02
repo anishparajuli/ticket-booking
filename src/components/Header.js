@@ -6,14 +6,6 @@ import config from 'react-global-configuration';
 
 class Header extends Component{
 
-  constructor(props){
-    super(props);
-    this.state={
-      loggedIn:false
-    };
-
-    // this.loginCheck=this.loginCheck.bind(this);
-  }
 
   render(){
 return(
@@ -25,20 +17,22 @@ return(
           <Menu.Item>
             <Input icon='search' placeholder='Search...' />
           </Menu.Item>
-          <Link to='/login'><Menu.Item>Log in</Menu.Item></Link>
+          {this.loginCheck()}
         </Menu.Menu>
       </Menu>
 );
   }
 
-  // loginCheck(){
-  //   if(!localStorage.getItem('USER_TOKEN')){
-  //    this.setState({loggedIn:true});
-  //     return(
-  //       <Link to='/login'><Menu.Item>Log in</Menu.Item></Link>);
-  //   }
-  //   return;
-  // } 
+  loginCheck(){
+    if(!this.props.loggedIn){
+      return(
+        <Link to='/login'><Menu.Item>Log in</Menu.Item></Link>);
+    }
+    else{
+      return(
+      <Link to={'/profile'}><Menu.Item>Hi! {localStorage.getItem('username')}</Menu.Item></Link>);
+    }
+  } 
   
 }
 export default Header

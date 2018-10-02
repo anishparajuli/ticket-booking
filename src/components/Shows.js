@@ -15,6 +15,7 @@ import moment from 'moment';
 import {DatetimePickerTrigger} from 'rc-datetime-picker';
 import {ToastContainer,toast} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import config from 'react-global-configuration';
 
 
 /*  ................................
@@ -22,15 +23,14 @@ import 'react-toastify/dist/ReactToastify.css';
 .......
  * ...........................
  */
-const APIURL = "http://192.168.0.105:8080";
+const APIURL = "https://ticketbooking-12.appspot.com";
 
 const addshow = '/shows/add';
 const listshows = '/client/listshows';
 const listclientscreen = '/client/listscreens';
 const listevent = "/client/listevents";
 const listcatforscreen = "/categories"; //{screen_id}/categories;
-const ctoken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJleHAiOjExNTM4MTIxNjgwf' +
-        'Q.hSa8tiEWRqpOChnS0HODzKnIsiKbz2cvwuwFCOkzcds';
+const ctoken = localStorage.getItem('USER_TOKEN');
 
 class Shows extends Component {
 

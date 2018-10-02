@@ -4,17 +4,18 @@ import axios from 'axios';
 import {BrowserRouter, Route, Link, Switch} from 'react-router-dom'
 import {Button, Modal, Form, Label, Grid,Image, LabelDetail} from 'semantic-ui-react';
 import ApiHandler from './ApiHandler';
+import config from 'react-global-configuration';
+
 /*  ................................
 .........Main App class ...........
 .......
  * ...........................
  */
-const APIURL = "http://192.168.0.105:8080";
+const APIURL = "https://ticketbooking-12.appspot.com"
 const clientevents = "/listevents";
 const clientscreen="/listscreens";
 const screencategory="/categories"; //{screen_id}/categories;
-const ctoken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoyLCJleHAiOjExNTM4MTIxNjgwf' +
-        'Q.hSa8tiEWRqpOChnS0HODzKnIsiKbz2cvwuwFCOkzcds';
+const ctoken = localStorage.getItem('USER_TOKEN');
 
 // const myApi=new ApiHandler();
 var context;

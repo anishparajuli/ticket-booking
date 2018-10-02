@@ -24,7 +24,7 @@ class Main extends Component {
         
         return ( <div>
                    
-                <Featured />
+                
                 <EventList/>
                 
                  

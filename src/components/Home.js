@@ -24,29 +24,42 @@ class Home extends Component {
     this.state = {
         loggedIn:false
     };
+    
   }
                
     render() {
         
         return ( <div>
-
-            <Header />
+            
+            <Header loggedIn={this.state.loggedIn} />
                 <Switch>
                 <Route exact path='/' component={Main}/>
                 <Route path= '/events/:event_id/shows' component={EventDetail} />
-                <Route path='/login' component={Login}/>
+                <Route path='/login' component={Login} loggedIn={this.state.loggedIn} />
                 <Route path='/admin' component={Admin} />
                 <Route path='/register/user' component={UserRegister} />
-                <Route path='/user/:user_id' component={User} />
-                <Route path='/screen/add' component={AddScreen}/>
+                <Route path='/profile/' component={User} />
+                <Route path='/screens/add' component={AddScreen}/>
                 <Redirect to='/'/>
                 </Switch>
           </div>
                 
         );
     }
+
+    componentDidMount(){
+        this.loginCheck();        
         
 }
+    loginCheck(){
+        console.log("got upto here");
+        if(localStorage.getItem('USER_TOKEN')){
+            this.setState({loggedIn:true});
+        }
+        else
+            this.setState({loggedIn:false});
+    }
+    }
 
 
 export default Home;

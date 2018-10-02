@@ -20,8 +20,12 @@ import Dashboard from './Dashboard';
 
 import Events from './Events';
 import Shows from './Shows';
+import AddScreen from './Admin/AddScreen';
 
-const API = "https://ticketbooking-12.appspot.com/";
+import config from 'react-global-configuration';
+
+
+const API = "https://ticketbooking-12.appspot.com";
 const events = "events/"
 
 
@@ -77,6 +81,10 @@ render() {
                 <Icon name='home' style={styles.sideicon}/>
                     Shows
                 </Menu.Item>
+                <Menu.Item onClick={() => this.changeTab('screens')} as='a' name='screens'>
+                <Icon name='home' style={styles.sideicon}/>
+                    Screens
+                </Menu.Item>
             </Sidebar>
             <Sidebar.Pusher style={{
                 position:'absolute',
@@ -100,6 +108,9 @@ if (tabName === 'events') {
 }
 if(tabName==='shows'){
     return (<Shows/>)
+}
+if(tabName=='screens'){
+    return (<AddScreen/>)
 }
 }
 

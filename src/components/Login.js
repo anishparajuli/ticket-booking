@@ -15,23 +15,25 @@ class Login extends Component {
         super(props);
         this.state={
             username:'',
-            password:''
+            password:'',
+            loggIn:false
         };
         
         this.login=this.login.bind(this);
-    }
+           }
 
     handleChange = (e, { name, value }) => this.setState({ [name]: value })
   
     render() {
         const { username, password } = this.state;
-        return ( 
+        return (   
         <Grid  centered >
+        {this.loginCheck()}  
         <Grid.Column width={5} >
         <Segment inverted >
         <Form inverted onSubmit={this.login}>
             <Form.Input label='Username' placeholder='Username' name="username" value={username} onChange={this.handleChange}/>
-            <Form.Input label='Password' placeholder='Password' name="password" value={password} onChange={this.handleChange}/>
+            <Form.Input label='Password' type='password' placeholder='Password' name="password" value={password} onChange={this.handleChange}/>
             
             <Button type='submit'>Login</Button>
             <Divider/>
@@ -46,14 +48,15 @@ class Login extends Component {
     }
 
     login(){
-        
+        const context=this;
         axios({method:'post',url:config.get('base_url')+'/login',data:this.state,
         config: { headers: {'Content-Type': 'application/json' }}})
           .then(function (response) {
             console.log(response);
             if(response.status==200){
                 localStorage.setItem('USER_TOKEN', response.data.token);
-                localStorage.setItem('username',this.state.username);
+                localStorage.setItem('username',context.state.username);
+                context.setState({loggedIn:true});
             }
             console.log(localStorage.getItem('USER_TOKEN'));
           })
@@ -61,6 +64,15 @@ class Login extends Component {
             console.log(error);
           });
     }
+
+    loginCheck(){
+        
+        if(this.state.loggedIn){
+          return(
+            <Redirect to='/'/>);
+        }
+        return;
+      }
         
 }
 
