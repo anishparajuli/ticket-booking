@@ -56,6 +56,7 @@ class Login extends Component {
             if(response.status==200){
                 localStorage.setItem('USER_TOKEN', response.data.token);
                 localStorage.setItem('username',context.state.username);
+                localStorage.setItem('user_type',response.data.user_kind);
                 context.setState({loggedIn:true});
             }
             console.log(localStorage.getItem('USER_TOKEN'));

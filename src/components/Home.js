@@ -13,6 +13,7 @@ import axios from 'axios';
 import EventDetail from './Events/EventDetail';
 import {Route, Link,Switch, Redirect} from 'react-router-dom'              
 import AddScreen from './Admin/AddScreen';
+import ClientRegister from './Admin/ClientRegister';
 /* ................................ 
 .........Main App class ...........
 ..................................*/
@@ -37,7 +38,9 @@ class Home extends Component {
                 <Route path= '/events/:event_id/shows' component={EventDetail} />
                 <Route path='/login' component={Login} loggedIn={this.state.loggedIn} />
                 <Route path='/admin' component={Admin} />
-                <Route path='/register/user' component={UserRegister} />
+                <Route path='/register/user/' component={UserRegister} />
+
+                <Route path='/register/client/:token' component={ClientRegister} /> 
                 <Route path='/profile/' component={User} />
                 <Route path='/screens/add' component={AddScreen}/>
                 <Redirect to='/'/>
